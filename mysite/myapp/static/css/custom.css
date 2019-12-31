@@ -1,0 +1,8 @@
+.prompt {
+    display: none;
+}
+
+#notebook-container {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
