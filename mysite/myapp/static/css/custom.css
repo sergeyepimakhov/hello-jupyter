@@ -1,8 +1,26 @@
+/* -- jupyter customization --  */
+
+/* disable prompts */
 .prompt {
-    display: none;
+    display: none !important;
 }
 
+/* disable container borders and shadow */ 
 #notebook-container {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
+}
+
+/* cell with PEP8 max-width in number of characters */
+/* center */
+.cell {
+    margin: auto !important; 
+    max-width: 120ch;
+}
+
+/*  -- thebelab --  */
+
+/* disable restart button */
+button.thebelab-restart-button {
+    display: none;
 }

@@ -4,11 +4,50 @@
 
 <head>
     {% load static %}
-    <link rel="stylesheet" href="https://cdn.jupyter.org/notebook/5.1.0/style/style.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+
+    <!-- thebe.css > jupyter.css > thema.css-->
+
+    <!-- configure and load thebe -->
+    <!-- theme: "ipython" works only in pairing with style.min.css -->
+    <script type="text/x-thebe-config">
+        {
+          bootstrap: true,
+          requestKernel: false,
+          binderOptions: {
+            repo: "binder-examples/requirements",
+          },
+          kernelOptions: {
+            name: "python3",
+          },
+          codeMirrorconfig: {
+            lineNumbers: true,
+            theme: "ipython",
+            // theme: "blackboard",
+          },
+        }
+    </script>
+    <!-- <script type="text/javascript" src="https://unpkg.com/thebelab@latest"></script> -->
+    <script type="text/javascript" src="{% static 'thebe/lib/index.js' %}"></script>
+
+    <!-- jupyter styling -->
+    <!-- TODO: can we use js from jupyter? -->
+    <link rel="stylesheet" href="https://cdn.jupyter.org/notebook/6.0.2/style/style.min.css">
     <link rel="stylesheet" href="{% static 'css/jupyter2.css' %}">
     <link rel="stylesheet" href="{% static 'css/jupyter3.css' %}">
 
+    <!-- CodeMirror theme -->
+    <!-- <link rel="stylesheet" href="http://codemirror.net/theme/blackboard.css"> -->
+
+    <!-- custom styling -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <script src="{% static 'js/index.js' %}"></script>
+
 
     <title>{% block title %}Sample page{% endblock %}</title>
 </head>
@@ -19,44 +58,48 @@
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
     {% for c in cells %}
-        {% if c.cell_type == "markdown" %}
-        <div class="cell border-box-sizing text_cell rendered">
-            <div class="prompt input_prompt"></div>
-            <div class="inner_cell">
-                <div class="text_cell_render border-box-sizing rendered_html">
-                    {{ c.source|join:""|markdown2html|safe }}
-                </div>
-            </div>
-        </div>
-        {% elif c.cell_type == "code" %}
-        <div class="cell border-box-sizing code_cell rendered">
-            <div class="input">
+        {% if c.source %}
+            {% if c.cell_type == "markdown" %}
+            <div class="cell border-box-sizing text_cell rendered unselected">
                 <div class="prompt input_prompt"></div>
                 <div class="inner_cell">
-                    <div class="input_area">
-                        <div class="highlight hl-ipython3">
-                            <pre>{{ c.source|join:"" }}</pre>
-                        </div>
+                    <div class="text_cell_render border-box-sizing rendered_html">
+                        {{ c.source|join:""|markdown2html|safe }}
                     </div>
                 </div>
             </div>
-            <div class="output_wrapper">
-                <div class="output">
-                    <div class="output_area">
-                        <div class="prompt"></div>
-                        <div class="output_subarea output_stream output_stdout output_text">
+            {% elif c.cell_type == "code" %}
+            <div class="cell border-box-sizing code_cell rendered unselected" tabindex="2">
+                <div class="input">
+                    <div class="prompt input_prompt"></div>
+                    <div class="inner_cell">
+                        <div class="input_area">
+                            <div class="highlight hl-ipython3" data-executable="true" data-language="{{ c.source|language }}">
+                                <pre>{{ c.source|join:"" }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="output_wrapper">
+                    <div class="output">
+                        <div class="output_area">
+                            <div class="prompt"></div>
                             {% for o in c.outputs %}
                                 {% if o.output_type == "stream" %}
-                                <pre>{{ o.text|join:"" }}</pre>
+                                <div class="output_subarea output_text output_stdout output_stream">
+                                    <pre>{{ o.text|join:"" }}</pre>
+                                </div>
                                 {% elif o.output_type == "error" %}
-                                <pre>{{ o.traceback|join:""|ansi2html|safe }}</pre>
+                                <div class="output_subarea output_text output_error">
+                                    <pre>{{ o.traceback|join:""|ansi2html|safe }}</pre>
+                                </div>
                                 {% endif %}
                             {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            {% endif %}
         {% endif %}
     {% endfor %}
     </div>
