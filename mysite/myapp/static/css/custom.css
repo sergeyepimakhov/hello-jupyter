@@ -18,6 +18,11 @@
     max-width: 120ch;
 }
 
+/* addition border gap from the left side */
+.code_cell.selected {
+    padding-left: 10px;
+}
+
 /*  -- thebelab --  */
 
 /* disable restart button */

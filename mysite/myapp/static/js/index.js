@@ -12,9 +12,7 @@ $(document).ready(function() {
     });
 
     // TODO: on "Run" click jump to the next cell
-    // $('div.cell.code_cell.selected').find( "button" ).on('click', function() {
-    //    alert('clicked');
-    // });
+    // $('div.cell.code_cell.selected').next().find('div.cell.code_cell').addClass('selected');
 
     // TODO: double click on output -> disable it
 });
